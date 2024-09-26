@@ -14,11 +14,54 @@ datasource db {
 }
 
 model Usuario {
-  id              Int      @id @default(autoincrement())
-  nome            String
-  email           String   @unique
-  senha           String
-  data_nascimento DateTime
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
+  id            Int       @id @default(autoincrement())
+  nome          String
+  senha         String
+  dt_nascimento DateTime?
+  status        Boolean   @default(false)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @default(now()) @updatedAt
+
+  prescricoes Prescricao[]
+}
+
+model Prescricao {
+  id         Int       @id @default(autoincrement())
+  id_usuario Int
+  observacao String?
+  id_remedio Int
+  frequencia DateTime
+  dt_inicio  DateTime
+  dt_fim     DateTime?
+  status     Boolean
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+
+  usuario Usuario @relation(fields: [id_usuario], references: [id])
+  remedio Remedio @relation(fields: [id_remedio], references: [id])
+
+  historicos Historico[]
+}
+
+model Historico {
+  id            Int      @id @default(autoincrement())
+  id_prescricao Int      @unique
+  dt_atual      DateTime
+  status        Boolean
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now()) @updatedAt
+
+  prescricao Prescricao @relation(fields: [id_prescricao], references: [id])
+}
+
+model Remedio {
+  id         Int      @id @default(autoincrement())
+  nome       String
+  funcao     String
+  dosagem    Float
+  status     Boolean
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  prescricoes Prescricao[]
 }
