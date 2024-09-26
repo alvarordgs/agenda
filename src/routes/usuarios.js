@@ -1,5 +1,5 @@
 const express = require("express");
-const createUser = require('./../controller/usuarios');
+const userController = require('./../controller/usuarios');
 const router = express.Router();
 /** 
  * @swagger
@@ -32,6 +32,14 @@ const router = express.Router();
  *      400:
  *        description: Falha ao criar o usuáro
 */
-router.post("/", createUser);
+router.post("/", userController.criarUsuario);
+
+router.get("/", userController.buscarUsuarios);
+
+router.get("/:id", userController.buscarUsuario);
+
+router.patch("/:id", userController.atualizarUsuario);
+
+router.delete("/:id", userController.deletarUsuario);
 
 module.exports = router;
