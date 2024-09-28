@@ -30,7 +30,7 @@ model Prescricao {
   id_usuario Int
   observacao String?
   id_remedio Int
-  frequencia DateTime
+  frequencia Int
   dt_inicio  DateTime
   dt_fim     DateTime?
   status     Boolean
@@ -45,7 +45,7 @@ model Prescricao {
 
 model Historico {
   id            Int      @id @default(autoincrement())
-  id_prescricao Int      @unique
+  id_prescricao Int
   dt_atual      DateTime
   status        Boolean
   created_at    DateTime @default(now())
