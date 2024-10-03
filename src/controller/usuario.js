@@ -1,14 +1,18 @@
 const prisma = require('../../prisma/prismaClient');
+const bcrypt = require('bcrypt');
 
 const usuarioController = {
   criarUsuario: async (req, res) => {
     try {
-      const { nome, senha, dt_nascimento } = req.body;
+      const { nome, email, senha, dt_nascimento } = req.body;
 
+      const senhaCriptografada = await bcrypt.hash(senha, 10);
+      
       const novoUsuario = await prisma.usuario.create({
         data: {
           nome,
-          senha,
+          email,
+          senha: senhaCriptografada,
           dt_nascimento: dt_nascimento ? new Date(dt_nascimento) : null,
           status: true
         }

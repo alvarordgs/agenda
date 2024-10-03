@@ -1,5 +1,6 @@
 const express = require("express");
 const userController = require('../controller/usuario');
+const authController = require('../controller/auth')
 const router = express.Router();
 /** 
  * @swagger
@@ -36,7 +37,7 @@ router.post("/", userController.criarUsuario);
 
 router.get("/", userController.buscarUsuarios);
 
-router.get("/:id", userController.buscarUsuario);
+router.get("/:id", authController.autenticarToken, userController.buscarUsuario);
 
 router.patch("/:id", userController.atualizarUsuario);
 
