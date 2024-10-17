@@ -25,7 +25,7 @@ const router = express.Router();
  *                type: string
  *                description: Senha do novo usuário
  *              data_nascimento:
- *                  type: date
+ *                  type: string
  *                  description: Data de nascimento do novo usuário
  *    responses:
  *      201:
@@ -35,12 +35,103 @@ const router = express.Router();
 */
 router.post("/", userController.criarUsuario);
 
+
+/** 
+ * @swagger
+ * /usuario:
+ *  get: 
+ *    summary: Busca todos os usuários
+ *    description: Busca todos os usuários cadastrados.
+ *    responses:
+ *      200:
+ *        description: Sucesso ao buscar os usuários
+ *      404:
+ *        description: Usuários não encontrados
+*/
 router.get("/", userController.buscarUsuarios);
 
+/** 
+ * @swagger
+ * /usuario/{id}:
+ *  get: 
+ *    summary: Busca um usuário
+ *    description: Busca um usuário pelo id.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: Id do usuário
+ *    responses:
+ *      200:
+ *        description: Usuário encontrado com sucesso
+ *      404:
+ *        description: Usuário não encontrado
+*/
 router.get("/:id", authController.autenticarToken, userController.buscarUsuario);
 
+/** 
+ * @swagger
+ * /usuario/{id}:
+ *  patch: 
+ *    summary: Atualiza os dados do usuário
+ *    description: Atualiza uma ou todas as informações do usuário.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: Id do usuário
+ *    requestBody:
+ *      required: true
+ *      content: 
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              nome:
+ *                type: string
+ *                description: Nome
+ *              email:
+ *                type: string
+ *                description: E-mail
+ *              senha:
+ *                type: string
+ *                description: Senha
+ *              data_nascimento:
+ *                  type: string
+ *                  description: Data de nascimento
+ *    responses:
+ *      200:
+ *        description: Usuário atualizado com sucesso
+ *      400:
+ *        description: Falha ao atualizar o usuáro
+ *      404:
+ *        description: Usuário não encontrado
+*/
 router.patch("/:id", userController.atualizarUsuario);
 
+/** 
+ * @swagger
+ * /usuario/{id}:
+ *  delete: 
+ *    summary: Deleta um usuário
+ *    description: Deleta um usuário a partir de um id.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: Id do usuário
+ *    responses:
+ *      200:
+ *        description: Usuário deletado com sucesso
+ *      404:
+ *        description: Usuário não encontrado
+*/
 router.delete("/:id", userController.deletarUsuario);
 
 module.exports = router;
