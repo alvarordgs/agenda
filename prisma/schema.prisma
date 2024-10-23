@@ -20,6 +20,7 @@ model Usuario {
   senha         String
   dt_nascimento DateTime?
   status        Boolean   @default(false)
+  papel         String
   created_at    DateTime  @default(now())
   updated_at    DateTime  @default(now()) @updatedAt
 
