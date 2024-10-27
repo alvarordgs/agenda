@@ -14,7 +14,7 @@ const authController = {
       return res.status(401).json({ message: 'Credenciais inválidas!' });
     }
 
-    const token = jwtConfig.generateToken(usuario.id);
+    const token = jwtConfig.generateToken(usuario.id, usuario.role);
 
     return res.status(200).json({ token });
   },
@@ -22,12 +22,10 @@ const authController = {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
-    console.log('token -> ', token);
-
     if (token == null) return res.sendStatus(401);
 
     try {
-      const user = jwtConfig.verifyToken(token)
+      const user = jwtConfig.verifyToken(token);
       req.user = user;
       next();
     } catch (error) {

@@ -1,6 +1,7 @@
 const express = require("express");
 const userController = require('../controller/usuario');
-const authController = require('../controller/auth')
+const authController = require('../controller/auth');
+const checkRole = require('../middleware/roleMiddleware');
 const router = express.Router();
 /** 
  * @swagger
@@ -69,7 +70,7 @@ router.get("/", userController.buscarUsuarios);
  *      404:
  *        description: Usuário não encontrado
 */
-router.get("/:id", authController.autenticarToken, userController.buscarUsuario);
+router.get("/:id", authController.autenticarToken, checkRole('user'), userController.buscarUsuario);
 
 /** 
  * @swagger
