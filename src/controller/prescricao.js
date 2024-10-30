@@ -1,42 +1,48 @@
-const prisma = require('../../prisma/prismaClient')
+const prisma = require("../../prisma/prismaClient");
 
 const prescricaoController = {
   criarPrescricao: async (req, res) => {
     try {
-      const {
-        id_usuario,
-        observacao,
-        id_remedio,
-        frequencia,
-        dt_inicio,
-        dt_fim
-      } = req.body;
+      const userId = req.user.id;
 
-      if (!id_usuario || !id_remedio || !frequencia || !dt_inicio) {
-        return res.status(400).json({ error: 'Id do usuario, id do remédio, frequência e data de início são obrigatórios!' });
+      if (!userId) {
+        return res.status(401).json({ error: "Usuário não autenticado!" });
+      }
+
+      console.log("req.body -> ", req.body);
+
+      const { observacao, id_remedio, frequencia, dt_inicio, dt_fim } =
+        req.body;
+
+      if (!id_remedio || !frequencia || !dt_inicio) {
+        return res.status(400).json({
+          error:
+            "Id do usuario, id do remédio, frequência e data de início são obrigatórios!",
+        });
       }
 
       const prescricao = await prisma.prescricao.create({
         data: {
-          id_usuario,
+          id_usuario: parseInt(userId),
           observacao,
-          id_remedio,
-          frequencia,
+          id_remedio: parseInt(id_remedio),
+          frequencia: parseInt(frequencia),
           dt_inicio: new Date(dt_inicio),
           dt_fim: dt_fim ? new Date(dt_fim) : null,
           status: true,
-        }
+        },
+      }).catch((e) => {
+        console.log(e);
       });
 
       return res.status(201).json(prescricao);
     } catch (e) {
-      console.error('Erro ao cadastrar a prescricao!');
-      return res.status(500).json({ error: 'Erro interno do servidor!' });
+      console.error("Erro ao cadastrar a prescricao!");
+      return res.status(500).json({ error: "Erro interno do servidor!" });
     }
   },
   buscarPrescricoes: async (req, res) => {
     try {
-
       const userId = req.user.id;
 
       if (!userId) {
@@ -45,17 +51,17 @@ const prescricaoController = {
 
       const prescricoes = await prisma.prescricao.findMany({
         where: {
-          id_usuario: parseInt(userId)
+          id_usuario: parseInt(userId),
         },
         include: {
-          remedio: true
-        }
+          remedio: true,
+        },
       });
 
       return res.status(200).json(prescricoes);
     } catch (e) {
-      console.error('Erro ao buscar os prescricões!');
-      return res.status(500).json({ error: 'Erro interno do servidor!' })
+      console.error("Erro ao buscar os prescricões!");
+      return res.status(500).json({ error: "Erro interno do servidor!" });
     }
   },
   buscarPrescricao: async (req, res) => {
@@ -63,21 +69,21 @@ const prescricaoController = {
       const id = parseInt(req.params.id, 10);
 
       if (isNaN(id)) {
-        return res.status(400).json({ error: 'Parametro inválido!' });
+        return res.status(400).json({ error: "Parametro inválido!" });
       }
 
       const prescricao = await prisma.prescricao.findFirst({
-        where: { id }
+        where: { id },
       });
 
       if (!prescricao) {
-        return res.status(404).json({ error: 'Prescrição não encontrada!' });
+        return res.status(404).json({ error: "Prescrição não encontrada!" });
       }
 
       return res.status(200).json(prescricao);
     } catch (e) {
-      console.error("Erro ao buscar prescrição!")
-      return res.status(500).json({ error: 'Erro interno do servidor!' });
+      console.error("Erro ao buscar prescrição!");
+      return res.status(500).json({ error: "Erro interno do servidor!" });
     }
   },
   atualizarPrescricao: async (req, res) => {
@@ -90,19 +96,19 @@ const prescricaoController = {
         frequencia,
         dt_inicio,
         dt_fim,
-        status
+        status,
       } = req.body;
 
       if (isNaN(id)) {
-        return res.status(400).json({ error: 'Parâmetro inválido!' });
+        return res.status(400).json({ error: "Parâmetro inválido!" });
       }
 
       const prescricao = await prisma.prescricao.findFirst({
-        where: { id }
+        where: { id },
       });
 
       if (!prescricao) {
-        return res.status(404).json({ error: 'Prescrição não encontrada!' });
+        return res.status(404).json({ error: "Prescrição não encontrada!" });
       }
 
       const prescricaoAtualizada = await prisma.prescricao.update({
@@ -115,13 +121,13 @@ const prescricaoController = {
           dt_fim: dt_fim ? new Date(dt_fim) : prescricao.dt_fim,
           status: status ?? prescricao.status,
         },
-        where: { id }
+        where: { id },
       });
 
       return res.status(200).json(prescricaoAtualizada);
     } catch (e) {
-      console.error('Erro ao atualizar os dados da prescrição!');
-      return res.status(500).json({ error: 'Erro interno do servidor!' });
+      console.error("Erro ao atualizar os dados da prescrição!");
+      return res.status(500).json({ error: "Erro interno do servidor!" });
     }
   },
   deletarPrescricao: async (req, res) => {
@@ -129,27 +135,27 @@ const prescricaoController = {
       const id = parseInt(req.params.id, 10);
 
       if (isNaN(id)) {
-        return res.status(400).json({ error: 'Parâmetro inválido!' });
+        return res.status(400).json({ error: "Parâmetro inválido!" });
       }
 
       const prescricao = await prisma.prescricao.findFirst({
-        where: { id }
+        where: { id },
       });
 
       if (!prescricao) {
-        return res.status(404).json({ error: 'Prescrição não encontrada!' });
+        return res.status(404).json({ error: "Prescrição não encontrada!" });
       }
 
       const prescricaoDeletada = await prisma.prescricao.delete({
-        where: { id }
-      })
+        where: { id },
+      });
 
       return res.status(200).json(prescricaoDeletada.id);
     } catch (e) {
-      console.error('Erro ao deletar a prescrição!');
-      return res.status(500).json({ error: 'Erro interno do servidor!' });
+      console.error("Erro ao deletar a prescrição!");
+      return res.status(500).json({ error: "Erro interno do servidor!" });
     }
-  }
-}
+  },
+};
 
 module.exports = prescricaoController;
