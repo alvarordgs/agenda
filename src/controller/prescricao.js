@@ -34,14 +34,23 @@ const prescricaoController = {
       return res.status(500).json({ error: 'Erro interno do servidor!' });
     }
   },
-  buscarPrescricoes: async (_, res) => {
+  buscarPrescricoes: async (req, res) => {
     try {
-      const prescricoes = await prisma.prescricao.findMany();
 
-      if (!prescricoes.length) {
-        res.status(404).json({ error: "Lista de prescrições vazia!" });
-        return;
+      const userId = req.user.id;
+
+      if (!userId) {
+        return res.status(401).json({ error: "Usuário não autenticado!" });
       }
+
+      const prescricoes = await prisma.prescricao.findMany({
+        where: {
+          id_usuario: parseInt(userId)
+        },
+        include: {
+          remedio: true
+        }
+      });
 
       return res.status(200).json(prescricoes);
     } catch (e) {

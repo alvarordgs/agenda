@@ -1,5 +1,6 @@
 const express = require('express');
 const remedioController = require('../controller/remedio');
+const authController = require('../controller/auth');
 const router = express.Router();
 
 /** 
@@ -30,7 +31,7 @@ const router = express.Router();
  *      400:
  *        description: Falha ao criar o usuáro
 */
-router.post('/', remedioController.criarRemedio);
+router.post('/', authController.autenticarToken, remedioController.criarRemedio);
 
 /** 
  * @swagger
@@ -44,7 +45,7 @@ router.post('/', remedioController.criarRemedio);
  *      404:
  *        description: Remédios não encontrados
 */
-router.get('/', remedioController.buscarRemedios);
+router.get('/', authController.autenticarToken, remedioController.buscarRemedios);
 
 /** 
  * @swagger
@@ -65,7 +66,7 @@ router.get('/', remedioController.buscarRemedios);
  *      404:
  *        description: Usuário não encontrado
 */
-router.get('/:id', remedioController.buscarRemedio);
+router.get('/:id', authController.autenticarToken, remedioController.buscarRemedio);
 
 /** 
  * @swagger
@@ -104,7 +105,7 @@ router.get('/:id', remedioController.buscarRemedio);
  *      404:
  *        description: Remédio não encontrado
 */
-router.patch('/:id', remedioController.atualizarRemedio);
+router.patch('/:id', authController.autenticarToken, remedioController.atualizarRemedio);
 
 /** 
  * @swagger
@@ -125,6 +126,6 @@ router.patch('/:id', remedioController.atualizarRemedio);
  *      404:
  *        description: Remédio não encontrado
 */
-router.delete('/:id', remedioController.deletarRemedio);
+router.delete('/:id', authController.autenticarToken, remedioController.deletarRemedio);
 
 module.exports = router;

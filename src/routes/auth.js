@@ -44,6 +44,6 @@ router.post('/login', authController.login);
  *      401:
  *        description: Usuário não autorizado
 */
-router.get('/logout', authController.logout);
+router.post('/logout', authController.logout);
 
 module.exports = router;

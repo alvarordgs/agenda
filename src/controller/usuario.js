@@ -7,7 +7,7 @@ const usuarioController = {
       const { nome, email, senha, dt_nascimento } = req.body;
 
       const senhaCriptografada = await bcrypt.hash(senha, 10);
-      
+
       const novoUsuario = await prisma.usuario.create({
         data: {
           nome,
@@ -116,7 +116,7 @@ const usuarioController = {
       console.error('Erro ao deletar o usuário!')
       return res.status(500).json({ error: "Erro interno do servidor!" });
     }
-  },
+  }
 }
 
 module.exports = usuarioController;

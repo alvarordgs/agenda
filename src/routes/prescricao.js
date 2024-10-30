@@ -1,5 +1,6 @@
 const express = require('express');
 const prescricaoController = require('../controller/prescricao');
+const authController = require('../controller/auth');
 const router = express.Router();
 /** 
  * @swagger
@@ -38,7 +39,7 @@ const router = express.Router();
  *      400:
  *        description: Falha ao criar o usuáro
 */
-router.post('/', prescricaoController.criarPrescricao);
+router.post('/', authController.autenticarToken, prescricaoController.criarPrescricao);
 
 /** 
  * @swagger
@@ -52,7 +53,7 @@ router.post('/', prescricaoController.criarPrescricao);
  *      404:
  *        description: Prescrição não encontradas
 */
-router.get('/', prescricaoController.buscarPrescricoes);
+router.get('/', authController.autenticarToken, prescricaoController.buscarPrescricoes);
 
 /** 
  * @swagger
@@ -73,7 +74,7 @@ router.get('/', prescricaoController.buscarPrescricoes);
  *      404:
  *        description: Prescrição não encontrada
 */
-router.get('/:id', prescricaoController.buscarPrescricao);
+router.get('/:id', authController.autenticarToken, prescricaoController.buscarPrescricao);
 
 
 /** 
@@ -125,7 +126,7 @@ router.get('/:id', prescricaoController.buscarPrescricao);
  *      404:
  *        description: Prescrição não encontrada
 */
-router.patch('/:id', prescricaoController.atualizarPrescricao);
+router.patch('/:id', authController.autenticarToken, prescricaoController.atualizarPrescricao);
 
 /** 
  * @swagger
@@ -146,6 +147,6 @@ router.patch('/:id', prescricaoController.atualizarPrescricao);
  *      404:
  *        description: Prescrição não encontrado
 */
-router.delete('/:id', prescricaoController.deletarPrescricao);
+router.delete('/:id', authController.autenticarToken, prescricaoController.deletarPrescricao);
 
 module.exports = router;

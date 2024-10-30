@@ -1,9 +1,15 @@
 const express = require('express');
-const app = express();
-app.use(express.json());
 const swaggerUi = require('swagger-ui-express')
 const swaggerDocs = require('./configs/swaggerConfig')
 const env = require('dotenv').config();
+const cors = require('cors');
+const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
+
+app.use(express.json());
 
 const usuarioRoutes = require("./src/routes/usuario")
 const remedioRoutes = require("./src/routes/remedio")
@@ -22,6 +28,8 @@ app.use("/historico", historicoRoutes);
 app.use("/prescricao", prescricaoRoutes);
 
 app.use('/auth', authRoutes);
+
+
 
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000");

@@ -1,5 +1,6 @@
 const express = require('express');
 const historicoController = require('../controller/historico');
+const authController = require('../controller/auth');
 const router = express.Router();
 
 /** 
@@ -27,7 +28,7 @@ const router = express.Router();
  *      400:
  *        description: Falha ao criar o usuáro
 */
-router.post('/', historicoController.criarHistorico);
+router.post('/', authController.autenticarToken, historicoController.criarHistorico);
 
 /** 
  * @swagger
@@ -41,7 +42,7 @@ router.post('/', historicoController.criarHistorico);
  *      404:
  *        description: Históricos não encontrados
 */
-router.get('/', historicoController.buscarHistoricos);
+router.get('/', authController.autenticarToken, historicoController.buscarHistoricos);
 
 
 /** 
@@ -63,7 +64,7 @@ router.get('/', historicoController.buscarHistoricos);
  *      404:
  *        description: Histórico não encontrado
 */
-router.get('/:id', historicoController.buscarHistorico);
+router.get('/:id', authController.autenticarToken, historicoController.buscarHistorico);
 
 
 /** 
@@ -103,7 +104,7 @@ router.get('/:id', historicoController.buscarHistorico);
  *      404:
  *        description: Histórico não encontrado
 */
-router.patch('/:id', historicoController.atualizarHistorico);
+router.patch('/:id', authController.autenticarToken, historicoController.atualizarHistorico);
 
 /** 
  * @swagger
@@ -124,6 +125,6 @@ router.patch('/:id', historicoController.atualizarHistorico);
  *      404:
  *        description: Histórico não encontrado
 */
-router.delete('/:id', historicoController.deletarHistorico);
+router.delete('/:id', authController.autenticarToken, historicoController.deletarHistorico);
 
 module.exports = router;

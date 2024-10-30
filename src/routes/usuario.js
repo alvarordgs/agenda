@@ -34,7 +34,7 @@ const router = express.Router();
  *      400:
  *        description: Falha ao criar o usuáro
 */
-router.post("/", userController.criarUsuario);
+router.post("/", authController.autenticarToken, userController.criarUsuario);
 
 
 /** 
@@ -49,7 +49,7 @@ router.post("/", userController.criarUsuario);
  *      404:
  *        description: Usuários não encontrados
 */
-router.get("/", userController.buscarUsuarios);
+router.get("/", authController.autenticarToken, userController.buscarUsuarios);
 
 /** 
  * @swagger
@@ -112,7 +112,7 @@ router.get("/:id", authController.autenticarToken, checkRole('user'), userContro
  *      404:
  *        description: Usuário não encontrado
 */
-router.patch("/:id", userController.atualizarUsuario);
+router.patch("/:id", authController.autenticarToken, userController.atualizarUsuario);
 
 /** 
  * @swagger
@@ -133,6 +133,6 @@ router.patch("/:id", userController.atualizarUsuario);
  *      404:
  *        description: Usuário não encontrado
 */
-router.delete("/:id", userController.deletarUsuario);
+router.delete("/:id", authController.autenticarToken, userController.deletarUsuario);
 
 module.exports = router;
