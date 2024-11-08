@@ -149,4 +149,6 @@ router.patch('/:id', authController.autenticarToken, prescricaoController.atuali
 */
 router.delete('/:id', authController.autenticarToken, prescricaoController.deletarPrescricao);
 
+router.get('/pesquisar/data', authController.autenticarToken, prescricaoController.buscarPrescricaoPorData);
+
 module.exports = router;

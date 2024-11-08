@@ -9,8 +9,6 @@ const prescricaoController = {
         return res.status(401).json({ error: "Usuário não autenticado!" });
       }
 
-      console.log("req.body -> ", req.body);
-
       const { observacao, id_remedio, frequencia, dt_inicio, dt_fim } =
         req.body;
 
@@ -156,6 +154,39 @@ const prescricaoController = {
       return res.status(500).json({ error: "Erro interno do servidor!" });
     }
   },
+  buscarPrescricaoPorData: async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      if (!userId) {
+        return res.status(401).json({ error: "Usuário não autenticado!" });
+      }
+
+      const dataAtual = req.query.dataAtual;
+
+      if (!dataAtual) {
+        return res.status(400).json({ error: "Data não informada!" });
+      }
+
+      const prescricoes = await prisma.prescricao.findMany({
+        where: {
+          id_usuario: parseInt(userId),
+          AND: [
+            { dt_inicio: { lte: new Date(dataAtual) } },
+            { dt_fim: { gte: new Date(dataAtual) } },
+          ],
+        },
+        include: {
+          remedio: true,
+        },
+      });
+
+      return res.status(200).json(prescricoes);
+    } catch (e) {
+      console.error("Erro ao buscar prescrição por data!");
+      return res.status(500).json({ error: "Erro interno do servidor!" });
+    }
+  }
 };
 
 module.exports = prescricaoController;
