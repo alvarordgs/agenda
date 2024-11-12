@@ -171,6 +171,7 @@ const prescricaoController = {
       const prescricoes = await prisma.prescricao.findMany({
         where: {
           id_usuario: parseInt(userId),
+          status: true,
           AND: [
             { dt_inicio: { lte: new Date(dataAtual) } },
             { dt_fim: { gte: new Date(dataAtual) } },
@@ -178,10 +179,21 @@ const prescricaoController = {
         },
         include: {
           remedio: true,
+          historicos: true,
         },
       });
 
-      return res.status(200).json(prescricoes);
+      const prescricoesFormatadas = prescricoes.map((prescricao) => {
+        return {
+          id: prescricao.id,
+          observacao: prescricao.observacao,
+          frequencia: prescricao.frequencia,
+          remedio: prescricao.remedio,
+          historicos: prescricao.historicos,
+        };
+      });
+
+      return res.status(200).json(prescricoesFormatadas);
     } catch (e) {
       console.error("Erro ao buscar prescrição por data!");
       return res.status(500).json({ error: "Erro interno do servidor!" });
