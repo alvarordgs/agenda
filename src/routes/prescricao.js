@@ -5,7 +5,9 @@ const router = express.Router();
 /** 
  * @swagger
  * /prescricao:
- *  post: 
+ *  post:
+ *    tags:
+ *     - Prescrição 
  *    summary: Cria uma nova prescrição
  *    description: Adiciona uma nova prescrição ao sistema com base nas informações fornecidas.
  *    requestBody:
@@ -44,7 +46,9 @@ router.post('/', authController.autenticarToken, prescricaoController.criarPresc
 /** 
  * @swagger
  * /prescricao:
- *  get: 
+ *  get:
+ *    tags:
+ *      - Prescrição 
  *    summary: Busca todos as prescrição
  *    description: Busca todos as prescrição cadastradas.
  *    responses:
@@ -58,7 +62,9 @@ router.get('/', authController.autenticarToken, prescricaoController.buscarPresc
 /** 
  * @swagger
  * /prescricao/{id}:
- *  get: 
+ *  get:
+ *    tags:
+ *      - Prescrição 
  *    summary: Busca uma prescrição
  *    description: Busca uma prescrição pelo id.
  *    parameters:
@@ -80,7 +86,9 @@ router.get('/:id', authController.autenticarToken, prescricaoController.buscarPr
 /** 
  * @swagger
  * /prescricao/{id}:
- *  patch: 
+ *  patch:
+ *    tags:
+ *      - Prescrição 
  *    summary: Atualiza os dados da prescrição
  *    description: Atualiza uma ou todas as informações da prescrição.
  *    parameters:
@@ -131,7 +139,9 @@ router.patch('/:id', authController.autenticarToken, prescricaoController.atuali
 /** 
  * @swagger
  * /prescricao/{id}:
- *  delete: 
+ *  delete:
+ *    tags:
+ *      - Prescrição 
  *    summary: Deleta uma prescrição
  *    description: Deleta uma prescrição a partir de um id.
  *    parameters:
@@ -149,6 +159,27 @@ router.patch('/:id', authController.autenticarToken, prescricaoController.atuali
 */
 router.delete('/:id', authController.autenticarToken, prescricaoController.deletarPrescricao);
 
+/** 
+ * @swagger
+ * /prescricao/data:
+ *  get:
+ *    tags:
+ *      - Prescrição 
+ *    summary: Busca varias prescrições por data
+ *    description: Busca várias prescrição por uma data específica.
+ *    parameters:
+ *      - in: query
+ *        name: date
+ *        schema:
+ *          type: Date
+ *        required: true
+ *        description: Data da prescrição
+ *    responses:
+ *      200:
+ *        description: Prescrições encontradas com sucesso
+ *      400:
+ *        description: Erro ao buscar as prescrições
+*/
 router.get('/pesquisar/data', authController.autenticarToken, prescricaoController.buscarPrescricaoPorData);
 
 module.exports = router;

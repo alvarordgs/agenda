@@ -6,7 +6,9 @@ const router = express.Router();
 /** 
  * @swagger
  * /usuario:
- *  post: 
+ *  post:
+ *    tags:
+ *      - Usuário 
  *    summary: Cria um novo usuário
  *    description: Adiciona um novo usuário ao sistema com base nas informações fornecidas.
  *    requestBody:
@@ -40,7 +42,9 @@ router.post("/", userController.criarUsuario);
 /** 
  * @swagger
  * /usuario:
- *  get: 
+ *  get:
+ *    tags:
+ *      - Usuário 
  *    summary: Busca todos os usuários
  *    description: Busca todos os usuários cadastrados.
  *    responses:
@@ -54,7 +58,9 @@ router.get("/", authController.autenticarToken, userController.buscarUsuarios);
 /** 
  * @swagger
  * /usuario/{id}:
- *  get: 
+ *  get:
+ *    tags:
+ *      - Usuário 
  *    summary: Busca um usuário
  *    description: Busca um usuário pelo id.
  *    parameters:
@@ -75,7 +81,9 @@ router.get("/:id", authController.autenticarToken, checkRole('user'), userContro
 /** 
  * @swagger
  * /usuario/{id}:
- *  patch: 
+ *  patch:
+ *    tags:
+ *      - Usuário 
  *    summary: Atualiza os dados do usuário
  *    description: Atualiza uma ou todas as informações do usuário.
  *    parameters:
@@ -117,7 +125,9 @@ router.patch("/:id", authController.autenticarToken, userController.atualizarUsu
 /** 
  * @swagger
  * /usuario/{id}:
- *  delete: 
+ *  delete:
+ *    tags:
+ *      - Usuário 
  *    summary: Deleta um usuário
  *    description: Deleta um usuário a partir de um id.
  *    parameters:
@@ -134,5 +144,21 @@ router.patch("/:id", authController.autenticarToken, userController.atualizarUsu
  *        description: Usuário não encontrado
 */
 router.delete("/:id", authController.autenticarToken, userController.deletarUsuario);
+
+/** 
+ * @swagger
+ * /usuario/me:
+ *  get:
+ *    tags:
+ *      - Usuário 
+ *    summary: Busca o usuário logado
+ *    description: Busca o usuário logado na aplicação.
+ *    responses:
+ *      200:
+ *        description: Usuário encontrado com sucesso
+ *      401:
+ *        description: Usuário não autenticado
+*/
+router.get("/me/data", authController.autenticarToken, userController.me);
 
 module.exports = router;

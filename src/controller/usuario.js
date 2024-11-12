@@ -116,6 +116,31 @@ const usuarioController = {
       console.error('Erro ao deletar o usuário!')
       return res.status(500).json({ error: "Erro interno do servidor!" });
     }
+  },
+  me: async (req, res) => {
+    try {
+      const id = req.user.id;
+
+      if (!id) {
+        return res.status(401).json({ error: 'Usuário não autenticado!' });
+      }
+
+      const usuario = await prisma.usuario.findFirst({
+        where: { id }
+      });
+
+      const formattedUser = {
+        nome: usuario.nome,
+        email: usuario.email,
+        dt_nascimento: usuario.dt_nascimento,
+        status: usuario.status
+      };
+
+      return res.status(200).json(formattedUser);
+    } catch (e) {
+      console.error('Erro ao buscar o usuário!');
+      return res.status(500).json({ error: "Erro interno do servidor!" });
+    }
   }
 }
 

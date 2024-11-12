@@ -5,7 +5,9 @@ const router = express.Router();
 /** 
  * @swagger
  * /auth:
- *  post: 
+ *  post:
+ *    tags:
+ *      - Auth 
  *    summary: Login
  *    description: Cria uma sessão de login.
  *    requestBody:
@@ -35,7 +37,9 @@ router.post('/login', authController.login);
 /** 
  * @swagger
  * /auth:
- *  get: 
+ *  get:
+ *    tags:
+ *      - Auth 
  *    summary: Logout
  *    description: Desloga o usuário da sessão.
  *    responses:

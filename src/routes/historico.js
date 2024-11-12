@@ -6,7 +6,9 @@ const router = express.Router();
 /** 
  * @swagger
  * /historico:
- *  post: 
+ *  post:
+ *    tags:
+ *      - Histórico 
  *    summary: Cria um novo histórico
  *    description: Adiciona um novo histórico ao sistema com base nas informações fornecidas.
  *    requestBody:
@@ -33,7 +35,9 @@ router.post('/', authController.autenticarToken, historicoController.criarHistor
 /** 
  * @swagger
  * /historico:
- *  get: 
+ *  get:
+ *    tags:
+ *      - Histórico 
  *    summary: Busca todos os históricos
  *    description: Busca todos os históricos cadastrados.
  *    responses:
@@ -48,7 +52,9 @@ router.get('/', authController.autenticarToken, historicoController.buscarHistor
 /** 
  * @swagger
  * /historico/{id}:
- *  get: 
+ *  get:
+ *    tags:
+ *      - Histórico 
  *    summary: Busca um histórico
  *    description: Busca um histórico pelo id.
  *    parameters:
@@ -70,7 +76,9 @@ router.get('/:id', authController.autenticarToken, historicoController.buscarHis
 /** 
  * @swagger
  * /historico/{id}:
- *  patch: 
+ *  patch:
+ *    tags:
+ *      - Histórico 
  *    summary: Atualiza os dados do histórico
  *    description: Atualiza uma ou todas as informações do histórico.
  *    parameters:
@@ -109,7 +117,9 @@ router.patch('/:id', authController.autenticarToken, historicoController.atualiz
 /** 
  * @swagger
  * /historico/{id}:
- *  delete: 
+ *  delete:
+ *    tags:
+ *      - Histórico 
  *    summary: Deleta um histórico
  *    description: Deleta um histórico a partir de um id.
  *    parameters:
