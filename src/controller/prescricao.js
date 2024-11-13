@@ -29,8 +29,6 @@ const prescricaoController = {
           dt_fim: dt_fim ? new Date(dt_fim) : null,
           status: true,
         },
-      }).catch((e) => {
-        console.log(e);
       });
 
       return res.status(201).json(prescricao);
@@ -72,6 +70,9 @@ const prescricaoController = {
 
       const prescricao = await prisma.prescricao.findFirst({
         where: { id },
+        include: {
+          remedio: true,
+        }
       });
 
       if (!prescricao) {
@@ -86,23 +87,29 @@ const prescricaoController = {
   },
   atualizarPrescricao: async (req, res) => {
     try {
-      const id = parseInt(req.params.id, 10);
-      const {
-        id_usuario,
-        observacao,
-        id_remedio,
-        frequencia,
-        dt_inicio,
-        dt_fim,
-        status,
-      } = req.body;
+      const prescricaoId = parseInt(req.params.id, 10);
 
-      if (isNaN(id)) {
+      if (isNaN(prescricaoId)) {
         return res.status(400).json({ error: "Parâmetro inválido!" });
       }
 
+      const userId = req.user.id;
+
+      if (!userId) {
+        return res.status(401).json({ error: "Usuário não autenticado!" });
+      }
+
+      const { observacao, id_remedio, frequencia, dt_inicio, dt_fim } = req.body;
+
+      if (!id_remedio || !frequencia || !dt_inicio) {
+        return res.status(400).json({
+          error:
+            "Id do usuario, id do remédio, frequência e data de início são obrigatórios!",
+        });
+      }
+
       const prescricao = await prisma.prescricao.findFirst({
-        where: { id },
+        where: { id: prescricaoId },
       });
 
       if (!prescricao) {
@@ -111,15 +118,14 @@ const prescricaoController = {
 
       const prescricaoAtualizada = await prisma.prescricao.update({
         data: {
-          id_usuario: id_usuario ?? prescricao.id_usuario,
+          id_usuario: Number(userId) ?? prescricao.id_usuario,
           observacao: observacao ?? prescricao.observacao,
           id_remedio: id_remedio ?? prescricao.id_remedio,
-          frequencia: frequencia ?? prescricao.frequencia,
+          frequencia: Number(frequencia) ?? prescricao.frequencia,
           dt_inicio: dt_inicio ? new Date(dt_inicio) : prescricao.dt_inicio,
           dt_fim: dt_fim ? new Date(dt_fim) : prescricao.dt_fim,
-          status: status ?? prescricao.status,
         },
-        where: { id },
+        where: { id: prescricao.id },
       });
 
       return res.status(200).json(prescricaoAtualizada);

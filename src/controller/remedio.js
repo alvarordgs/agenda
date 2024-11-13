@@ -28,9 +28,19 @@ const remedioController = {
       return res.status(500).json({ error: 'Erro interno do servidor!' });
     }
   },
-  buscarRemedios: async (_, res) => {
+  buscarRemedios: async (req, res) => {
     try {
-      const remedios = await prisma.remedio.findMany();
+      const { status } = req.query;
+
+      if (status !== 'true' && status !== 'false' && status !== undefined) {
+        return res.status(400).json({ error: 'Parâmetro inválido!' });
+      }
+
+      const remedios = await prisma.remedio.findMany({
+        where: {
+          status: status === 'true' ? true : status === 'false' ? false : true
+        }
+      });
 
       if (!remedios.length) {
         res.status(404).json({ error: "Lista de remedios vazia!" });
@@ -67,10 +77,15 @@ const remedioController = {
   atualizarRemedio: async (req, res) => {
     try {
       const id = parseInt(req.params.id, 10);
-      const { nome, funcao, dosagem, status } = req.body;
 
       if (isNaN(id)) {
         return res.status(400).json({ error: 'Parâmetro inválido!' });
+      }
+
+      const { nome, funcao, dosagem } = req.body;
+
+      if (!nome && !funcao && !dosagem) {
+        return res.status(400).json({ error: 'Nenhum dado foi informado para atualização!' });
       }
 
       const remedio = await prisma.remedio.findFirst({
@@ -85,8 +100,7 @@ const remedioController = {
         data: {
           nome: nome ?? remedio.nome,
           funcao: funcao ?? remedio.funcao,
-          dosagem: parseFloat(dosagem) ?? remedio.dosagem,
-          status: status ?? remedio.status,
+          dosagem: parseFloat(dosagem) ?? remedio.dosagem
         },
         where: {
           id
@@ -115,9 +129,12 @@ const remedioController = {
         return res.status(404).json({ error: 'Remédio não encontrado!' });
       }
 
-      const remedioDeletado = await prisma.remedio.delete({
-        where: { id }
-      })
+      const remedioDeletado = await prisma.remedio.update({
+        data: {
+          status: false
+        },
+        where: { id: remedio.id }
+      });
 
       return res.status(200).json(remedioDeletado.id);
     } catch (e) {
